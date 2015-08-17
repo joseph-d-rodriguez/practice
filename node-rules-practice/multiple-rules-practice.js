@@ -4,7 +4,7 @@ var RulesEngine = require('node-rules');
 var aFact = {
 	"isTrue": false,
 	"worth": 500000.00,
-	"powerLevel": 8500,
+	"powerLevel": 9500,
 
 }; 
 
@@ -43,7 +43,7 @@ var whatsHisPowerLevel = {
 	},
 	"consequence": function(flow) {
 		this.result = false;
-		this.exception = "You're false and too rich... only if your power level was OVER NINE THOUSAND - WHAT!? NINE THOUSAND!? could you continue";
+		this.reason = "You're false and too rich... only if your power level was OVER NINE THOUSAND - WHAT!? NINE THOUSAND!? could you continue";
 		flow.stop();
 	},
 	"priority": 3
