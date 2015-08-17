@@ -4,7 +4,7 @@ var RulesEngine = require('node-rules');
 var aFact = {
 	"isTrue": false,
 	"worth": 500000.00,
-	"powerLevel": 9500,
+	"powerLevel": 8500,
 
 }; 
 
@@ -16,9 +16,9 @@ var falseIsBad = {
 		flow.when(!this.isTrue);
 	},
 	"consequence": function(flow) {
-		this.ruleFailCount = this.ruleFailCount ? this.ruleFailCount + 1 : 1;
-		//flow.next();
-		flow.stop();
+		this.ruleFailCount = this.ruleFailCount ? this.ruleFailCount + 1 : 1;		
+		//this.result = true;
+		flow.next();
 	},
 	"priority": 1
 };
@@ -30,8 +30,8 @@ var noRichPeople = {
 	},
 	"consequence": function(flow) {
 		this.ruleFailCount = this.ruleFailCount ? this.ruleFailCount + 1 : 1;
-		//flow.next();
-		flow.stop();
+		//this.result = true;
+		flow.next();
 	},
 	"priority": 2
 };
@@ -43,7 +43,7 @@ var whatsHisPowerLevel = {
 	},
 	"consequence": function(flow) {
 		this.result = false;
-		this.exception = "You're false and too rich, but that's okay since your power level is OVER NINE THOUSAND - WHAT!? NINE THOUSAND!?";
+		this.exception = "You're false and too rich... only if your power level was OVER NINE THOUSAND - WHAT!? NINE THOUSAND!? could you continue";
 		flow.stop();
 	},
 	"priority": 3
@@ -54,3 +54,4 @@ var rEngine = new RulesEngine([falseIsBad, noRichPeople, whatsHisPowerLevel]);
 rEngine.execute(aFact, function(result) {
 	console.log('result: ', result);
 });
+console.log('rEngine: ', rEngine);
