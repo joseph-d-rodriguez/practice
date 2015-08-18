@@ -4,6 +4,8 @@ var path = require('path');
 
 http.createServer(function(req, res) {
 	var serverFileStream = fs.createReadStream(path.join(__dirname, 'coolfile.txt'));
+	res.setHeader('Content-Type', 'text/plain');
+	res.setHeader('Content-Disposition', 'attachment; filename="serverdata.csv"');
 	serverFileStream.pipe(res, { end: false });
 	serverFileStream.on('end', function() {
 		res.end('enjoy my precious bytes! q_q');
