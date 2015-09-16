@@ -1,0 +1,24 @@
+{
+  "name": "practice-with-grunt",
+  "version": "0.0.1",
+  "description": "learning grunt by creating a small project with current node knowledge",
+  "main": "main.js",
+  "scripts": {
+    "test": "blahtest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joseph-d-rodriguez/practice.git"
+  },
+  "keywords": [
+    "practice",
+    "grunt",
+    "node"
+  ],
+  "author": "jrod",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joseph-d-rodriguez/practice/issues"
+  },
+  "homepage": "https://github.com/joseph-d-rodriguez/practice#readme"
+}
