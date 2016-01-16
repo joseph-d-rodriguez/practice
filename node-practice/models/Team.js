@@ -1,11 +1,12 @@
 module.exports = {
 
 	identity: 'team',
+	restPath: 'teams',
 	connection: 'connLocalMongo',
 
 	attributes: {
 		name: 'string',
-		slogon: 'string',
+		slogan: 'string',
 		location: 'string'
 	}
 };

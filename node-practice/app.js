@@ -3,24 +3,8 @@ var Waterline = require('waterline');
 var waterlineConfig = require('./db-config.js');
 var orm = new Waterline();
 var fs = require('fs');
-
-// Gathering models. **************************************
-var gatherModels = function(cb) {
-	fs.readdir('./models', function readModelsDir(readModelsDirError, modelFiles) {
-
-		if (readModelsDirError) { 
-			return cb(readModelsDirError);
-		}
-
-		var baseModelObjects = [];
-		modelFiles.forEach(function forEachModelFilepath(modelFilepath) {
-			// Load model objects to be later orm initialized.
-			baseModelObjects.push(require('./models/' + modelFilepath));
-		});
-		return cb(null, baseModelObjects);
-	});
-};
-// ********************************************************
+var configCrudForModels = require('./crud-boilerplate.js');
+var gatherModels = require('./gather-models.js');
 
 // Create Express app.
 var app = express();
@@ -31,46 +15,7 @@ app.get("/", function defaultRouteHandler(req, res) {
 	res.send('hello world');
 });
 
-app.post("/teams", function postTeamsHandler(req, res) {
-	var body = "";
-	req.on('data', function onPostTeamDataHandler(chunk) {
-		body += chunk.toString();
-		console.log('onPostTeamDataHandler chunk: ', chunk.toString());
-	});
-
-	req.on('end', function onPostTeamEndHandler() {
-		var jsonRequestBody = null;
-		try {
-			jsonRequestBody = JSON.parse(body);
-		} catch (e) {
-			return res.json({ error: e }, 400);
-		}
-
-		app.collections.team.create(jsonRequestBody, function createTeamHandler(newTeamError, newTeam) {
-
-			if (newTeamError) {
-				return res.json({ error: newTeamError }, 500);
-			}
-
-			return res.json(newTeam);
-		});
-	});
-	
-});
-
-app.get("/teams", function getTeamsHandler(req, res) {
-
-	app.collections.team.find().exec(function findTeamsHandler(findTeamsError, teamsFound) {
-
-		if (findTeamsError) {
-			return res.json({ error: findTeamsError }, 500);
-		}
-
-		return res.json(teamsFound);
-	});
-});
-
-// Initialize ORM.
+// Find all models.
 gatherModels(function gatherModelsHandler(gatherModelsError, gatheredModels) {
 
 	if (gatherModelsError) { throw gatherModelsError; }
@@ -88,6 +33,9 @@ gatherModels(function gatherModelsHandler(gatherModelsError, gatheredModels) {
 
 		// Add our ORM models to our Express app.
 		app.collections = waterlineOrm.collections;
+
+		// Config basic CRUD routes for all models.
+		configCrudForModels(app);
 
 		// Open app for listening.
 		app.listen(3232, function expressAppListeningHandler(isThereAnErrorHere) {
