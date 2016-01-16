@@ -61,7 +61,7 @@ var configCrudForModels = function(app) {
 
 		app.get("/" + model.restPath + "/:id", function getModelByIdHandler(req, res) {
 
-			model.findOne({ id: req.params.id }, function findOneModelById(findOneError, foundModel) {
+			model.findOne({ id: req.params.id }).populate('home_games').populate('away_games').exec(function findOneModelById(findOneError, foundModel) {
 
 				if (findOneError) {
 					return res.json({ error: findOneError }, 500);
