@@ -27,18 +27,18 @@ var configCrudForModels = function(app) {
 	Object.keys(app.collections).forEach(function expressCrudForEachModelHandler(modelIdentity) {
 		var model = app.collections[modelIdentity];
 
-		app.post("/" + model.restPath, function postModelHandler(req, res) {
+		app.post("/" + model.restPath, app.authHandler, function postModelHandler(req, res) {
 			
 			streamRequestAndParseJson(req, function postHandler(streamError, requestObject) {
 
 				if (streamError) {
-					return res.json({ error: streamError }, streamError.statusCode || 500);
+					return res.status(streamError.statusCode || 500).json({ error: streamError });
 				}
 
 				model.create(requestObject, function createModelHandler(newModelError, newModel) {
 
 					if (newModelError) {
-						return res.json({ error: newModelError }, 500);
+						return res.status(500).json({ error: newModelError });
 					}
 
 					return res.json(newModel);
@@ -52,7 +52,7 @@ var configCrudForModels = function(app) {
 			model.find().exec(function findModelsHandler(findModelsError, modelsFound) {
 
 				if (findModelsError) {
-					return res.json({ error: findModelsError }, 500);
+					return res.status(500).json({ error: findModelsError });
 				}
 
 				return res.json(modelsFound);
@@ -61,17 +61,24 @@ var configCrudForModels = function(app) {
 
 		app.get("/" + model.restPath + "/:id", function getModelByIdHandler(req, res) {
 
-			model.findOne({ id: req.params.id }).populate('home_games').populate('away_games').exec(function findOneModelById(findOneError, foundModel) {
+			var query = model.findOne({ id: req.params.id });
+			Object.keys(model.attributes).forEach(function forEachAttributeAlias(attributeAlias) {
+				if (model.attributes[attributeAlias].canPopulate) {
+					query.populate(attributeAlias);
+				}
+			});
+
+			query.exec(function findOneModelById(findOneError, foundModel) {
 
 				if (findOneError) {
-					return res.json({ error: findOneError }, 500);
+					return res.status(500).json({ error: findOneError });
 				}
 
 				return res.json(foundModel);
 			});
 		});
 
-		app.put("/" + model.restPath + "/:id", function updateModelByIdHandler(req, res) {
+		app.put("/" + model.restPath + "/:id", app.authHandler, function updateModelByIdHandler(req, res) {
 
 			streamRequestAndParseJson(req, function putHandler(streamError, requestObject) {
 				// Remove ID from data transfer object.
@@ -80,7 +87,7 @@ var configCrudForModels = function(app) {
 				model.update({ id: req.params.id }, requestObject, function updateModelHandler(updateModelError, updatedModel) {
 
 					if (updateModelError) {
-						return res.json({ error: updateModelError }, 500);
+						return res.status(500).json({ error: updateModelError });
 					}
 
 					return res.json(updatedModel);
@@ -88,12 +95,12 @@ var configCrudForModels = function(app) {
 			});
 		});
 
-		app.delete("/" + model.restPath + "/:id", function deleteModelByIdHandler(req, res) {
+		app.delete("/" + model.restPath + "/:id", app.authHandler, function deleteModelByIdHandler(req, res) {
 
 			model.destroy({ id: req.params.id }, function(deleteError) {
 
 				if (deleteError) {
-					return res.json({ error: deleteError }, 500);
+					return res.status(500).json({ error: deleteError });
 				}
 
 				return res.json({ status: 'OK', message: 'Deleted ' + model.identity + ' ' + req.params.id + ' successfully.' });

@@ -5,9 +5,21 @@ var orm = new Waterline();
 var fs = require('fs');
 var configCrudForModels = require('./crud-boilerplate.js');
 var gatherModels = require('./gather-models.js');
+var  initializePublicApi = require('./public-api.js');
 
 // Create Express app.
 var app = express();
+
+// Create some authentication handler.
+var authToken = "1cd66d6d-4379-4d0c-8a65-1a29e97ae327";
+app.authHandler = function(req, res, next) {
+
+	if (req.headers && req.headers.authentication && req.headers.authentication == authToken) {
+		next();
+	} else {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+};
 
 // Define default route.
 app.get("/", function defaultRouteHandler(req, res) {
@@ -36,6 +48,9 @@ gatherModels(function gatherModelsHandler(gatherModelsError, gatheredModels) {
 
 		// Config basic CRUD routes for all models.
 		configCrudForModels(app);
+
+		// Initialize public APIs.
+		initializePublicApi(app);
 
 		// Open app for listening.
 		app.listen(3232, function expressAppListeningHandler(isThereAnErrorHere) {
