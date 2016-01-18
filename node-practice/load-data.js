@@ -89,6 +89,9 @@ MongoClient.connect(url, function insertAllData(err, db) {
 
 						// Fix date to represent milliseconds timestamp
 						f.date = new Date(f.date).getTime();
+
+						// Link to tournament
+						f.tournament = tournamentId;
 					});
 
 					
