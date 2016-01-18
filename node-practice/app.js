@@ -21,10 +21,10 @@ app.authHandler = function(req, res, next) {
 	}
 };
 
-// Define default route.
-app.get("/", function defaultRouteHandler(req, res) {
-
-	res.send('hello world');
+// Log all requests (for code-review visibility)
+app.use(function(req, res, next) {
+	console.log('%s: %s %s', new Date().toString(), req.method, req.url);
+	return next();
 });
 
 // Find all models.
@@ -58,5 +58,4 @@ gatherModels(function gatherModelsHandler(gatherModelsError, gatheredModels) {
 		});
 	});
 });
-
 
