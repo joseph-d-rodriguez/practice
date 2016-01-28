@@ -1,0 +1,26 @@
+{
+  "name": "node-chit-chat",
+  "version": "0.0.1",
+  "description": "node server and client app to have really simple chit chatting conversations with others using node-chit-chat",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joseph-d-rodriguez/practice.git"
+  },
+  "keywords": [
+    "chat",
+    "IM",
+    "conversation",
+    "instant",
+    "messenger"
+  ],
+  "author": "j-rod",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joseph-d-rodriguez/practice/issues"
+  },
+  "homepage": "https://github.com/joseph-d-rodriguez/practice#readme"
+}
