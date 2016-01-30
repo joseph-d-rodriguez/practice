@@ -10,6 +10,8 @@ var net = require('net');
 var util = require('util');
 var protocolBegin = '###^',
 	protocolEnd = '$###';
+var readline = require('readline');
+var rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
 if (process.argv[2] == 'server') {
 	var clients = [];
@@ -42,11 +44,30 @@ if (process.argv[2] == 'server') {
 	chatServer.listen(2232, function onServerListenListener() {
 
 		console.log('server listening on 2232');
+		var serverCommandPrompt = function() {
+			rl.question('1) client count \r\n2) clients \r\n3) kill client(s) \r\n\r\nserver: ', function handleServerCommand(serverInput) {
+				switch(serverInput) {
+					case '1':
+						chatServer.getConnections(function handleGetConnections(getConnsError, connCount) {
+							if (getConnsError) { 
+								console.error(getConnsError);
+								
+							} else {
+								console.log('[%d]: %d client connection(s)', new Date().getTime(), connCount);
+								serverCommandPrompt();
+							}
+						});
+						break;
+					default:
+						console.log('server derstands :(');
+						serverCommandPrompt();
+				}
+			});
+		};
+		serverCommandPrompt();
 	});
 } else if (process.argv[2] == 'client') {
-	var readline = require('readline');
-	var rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-
+	
 	var doClientStuff = function(clientSocket) {
 		rl.question('What would you like to say to the server? ', function handleUserAnswerPrompt(answer) {
 				

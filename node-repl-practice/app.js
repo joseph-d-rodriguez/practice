@@ -26,3 +26,37 @@ var salaryInfo = function(salary) {
 
 replServer.defineCommand('salaryInfo', { help: 'prints lots of useful info to help manage money', action: salaryInfo });
 
+// According to http://bulk.openweathermap.org/sample/
+const sanJoseCityId = 5392171;
+const weatherApiKey = 'f3061e24862cb1b55f19b9acdc711e49';
+
+var http = require('http');
+var weatherApiOptions = {
+	host: 'api.openweathermap.org',
+	path: '/data/2.5/forecast',
+	query: {
+		id: sanJoseCityId,
+		appid: weatherApiKey
+	}
+};
+
+var getWeather = function() {
+	http.get('http://api.openweathermap.org/data/2.5/forecast?id=5392171&appid=f3061e24862cb1b55f19b9acdc711e49', function weatherHandler(weatherResponse) {
+		console.log('weather success');
+		var weatherData = '';
+		weatherResponse.on('data', function parseWeatherDataChunk(weatherChunk) {
+			weatherData += weatherChunk.toString();
+		});
+		weatherResponse.on('end', function logWeatherData() {
+			weatherData = JSON.parse(weatherData);
+			console.log('weather data log \n', weatherData.city);
+			weatherData.list.forEach(function eachForecastHandler(w) {
+				console.log('[%s]: %d mm of rain', new Date(w.dt), w.rain['3h']);
+			});
+			replServer.context.weatherData = weatherData;
+		});
+	});
+};
+
+replServer.defineCommand('getWeather', { help: 'get rain to know if skateable', action: getWeather });
+
