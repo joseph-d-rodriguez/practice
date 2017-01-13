@@ -5,6 +5,7 @@ var AuthorForm = require('./authorForm');
 var AuthorApi = require('./authorApi');
 var Router = require('react-router');
 var toastr = require('toastr');
+var _ = require('lodash');
 
 var ManageAuthorPage = React.createClass({
 	statics: {
@@ -35,7 +36,7 @@ var ManageAuthorPage = React.createClass({
 		if (authorId) {
 			var a = AuthorApi.getAuthorById(authorId);
 			console.log('found author: ', a);
-			this.setState({author: a});
+			this.setState({author: _.cloneDeep(a)});
 		}
 	},
 
