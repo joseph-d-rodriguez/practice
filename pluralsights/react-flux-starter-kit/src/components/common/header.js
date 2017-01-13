@@ -10,7 +10,7 @@ var Header = React.createClass({
 			<nav className="navbar navbar-default">
 				<div className="container-fluid">
 					<Link to="app" className="navbar-brand">
-						<img style={{maxHeight:'100%', maxWidth:'100%'}} src="images/pluralsight-logo.png" />
+						<img style={{maxHeight: '100%', maxWidth: '100%'}} src="images/pluralsight-logo.png" />
 					</Link>
 					<ul className="nav navbar-nav">
 						<li><Link to="app">Home</Link></li>
