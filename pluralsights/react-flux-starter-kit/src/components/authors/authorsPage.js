@@ -3,26 +3,34 @@
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
-var AuthorApi = require('./authorApi');
+var AuthorActions = require('../../actions/authorActions');
+var AuthorStore = require('../../stores/authorStore');
 
 var Authors = React.createClass({
 	getInitialState: function() {
 		return {
-			authors: []
+			authors: AuthorStore.getAllAuthors()
 		};
 	},
 
-	componentDidMount: function() {
-		if (this.isMounted()) {
-			this.setState({ authors: AuthorApi.getAllAuthors() });
-		}
+	componentWillMount: function() {
+		AuthorStore.addChangeListener(this._onChange);
+	},
+
+	componentWillUnmount: function() {
+		AuthorStore.removeChangeListener(this._onChange);
+	},
+
+	_onChange: function() {
+		this.setState({ authors: AuthorStore.getAllAuthors()});
 	},
 
 	render: function() {
 		var createAuthorRow = function(author) {
 			return (
 				<li key={author.id}>
-					<Link to="editAuthor" params={{id: author.id}}>{author.fName} {author.lName}</Link>
+					<Link to="editAuthor" params={{id: author.id}}>{author.id}</Link>
+					<h5>{author.fName} {author.lName}</h5>
 					<h6>{author.country}</h6>
 				</li>
 			);

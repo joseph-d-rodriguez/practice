@@ -2,7 +2,8 @@
 
 var React = require('react');
 var AuthorForm = require('./authorForm');
-var AuthorApi = require('./authorApi');
+var AuthorActions = require('../../actions/authorActions');
+var AuthorStore = require('../../stores/authorStore');
 var Router = require('react-router');
 var toastr = require('toastr');
 var _ = require('lodash');
@@ -34,7 +35,7 @@ var ManageAuthorPage = React.createClass({
 		var authorId = this.props.params.id; // React router passes params via props automatically via /author/:id
 		console.log('looking for author by id: ', authorId);
 		if (authorId) {
-			var a = AuthorApi.getAuthorById(authorId);
+			var a = AuthorStore.getAuthorById(authorId);
 			console.log('found author: ', a);
 			this.setState({author: _.cloneDeep(a)});
 		}
@@ -71,7 +72,12 @@ var ManageAuthorPage = React.createClass({
 			return;
 		}
 
-		AuthorApi.saveAuthor(this.state.author);
+		if (this.state.author.id) {
+			AuthorActions.updateAuthor(this.state.author);
+		} else {
+			AuthorActions.createAuthor(this.state.author);
+		}
+		
 		this.setState({dirty: false});
 
 		toastr.success('Author saved!');

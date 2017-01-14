@@ -37,6 +37,8 @@ var AuthorApi = {
 				1,
 				author);
 		}
+
+		return author;
 	},
 
 	getAuthorById: function(id) {
