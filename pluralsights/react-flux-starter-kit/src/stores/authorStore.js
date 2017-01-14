@@ -50,6 +50,13 @@ Dispatcher.register(function(action) {
 			AuthorStore.emitChange();
 			break;
 
+		case ActionTypes.DELETE_AUTHOR:
+			_authors.splice(
+				_authors.findIndex(function(a){return a.id == action.id;}),
+				1);
+			AuthorStore.emitChange();
+			break;
+
 		default:
 	}
 });

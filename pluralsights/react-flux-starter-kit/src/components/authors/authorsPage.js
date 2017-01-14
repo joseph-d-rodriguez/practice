@@ -5,6 +5,7 @@ var Router = require('react-router');
 var Link = Router.Link;
 var AuthorActions = require('../../actions/authorActions');
 var AuthorStore = require('../../stores/authorStore');
+var toastr = require('toastr');
 
 var Authors = React.createClass({
 	getInitialState: function() {
@@ -25,10 +26,18 @@ var Authors = React.createClass({
 		this.setState({ authors: AuthorStore.getAllAuthors()});
 	},
 
+	deleteAuthor: function(id, event) {
+		event.preventDefault();
+		AuthorActions.deleteAuthor(id);
+		toastr.success('Author Deleted');
+	},
+
 	render: function() {
+
 		var createAuthorRow = function(author) {
 			return (
 				<li key={author.id}>
+					{/*<button onClick={this.deleteAuthor.bind(this, author.id)}>Delete</button>*/}
 					<Link to="editAuthor" params={{id: author.id}}>{author.id}</Link>
 					<h5>{author.fName} {author.lName}</h5>
 					<h6>{author.country}</h6>

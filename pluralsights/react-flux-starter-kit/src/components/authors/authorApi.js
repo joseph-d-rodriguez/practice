@@ -43,6 +43,12 @@ var AuthorApi = {
 
 	getAuthorById: function(id) {
 		return authors.find(function(a) { return a.id == id; });
+	},
+
+	deleteAuthor: function(id) {
+		authors.splice(
+			authors.findIndex(function(a){return a.id == id;}),
+			1);
 	}
 };
 
