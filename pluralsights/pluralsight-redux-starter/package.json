@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Starter kit for React and Redux Pluralsight course by Cory House",
   "scripts": {
+    "predemo": "babel-node tools/startMessage.js",
+    "demo": "babel-node tools/srcServer.js",
     "prestart": "babel-node tools/startMessage.js",
     "start": "npm-run-all --parallel test:watch open:src lint:watch",
     "open:src": "babel-node tools/srcServer.js",
